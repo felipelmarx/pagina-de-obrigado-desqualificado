@@ -4,21 +4,47 @@
   --font-sans: var(--font-inter);
 }
 
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  width: 100%;
+  min-height: 100%;
+}
+
 body {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: #ffffff;
   color: #1a1a2e;
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
+/* ─── Main container ─── */
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 576px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 40px 20px 64px;
+}
+
 /* ─── Decorative top gradient bar ─── */
 .top-bar {
+  width: 100%;
   height: 4px;
   background: linear-gradient(90deg, #25d366 0%, #128c7e 50%, #075e54 100%);
 }
@@ -60,6 +86,19 @@ body {
   color: #128c7e;
   margin-top: 6px;
   font-weight: 600;
+}
+
+@media (max-width: 374px) {
+  .countdown-grid {
+    gap: 6px;
+  }
+  .countdown-cell {
+    min-width: 56px;
+    padding: 12px 6px;
+  }
+  .countdown-number {
+    font-size: 1.6rem;
+  }
 }
 
 /* ─── Separator dots between cells ─── */
@@ -168,6 +207,7 @@ body {
   border-radius: 100px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  margin-bottom: 16px;
 }
 
 /* ─── Divider ─── */
@@ -179,11 +219,124 @@ body {
   margin: 0 auto;
 }
 
+/* ─── Spacing helpers ─── */
+.section-center {
+  text-align: center;
+}
+
+.section-gap-sm {
+  margin-bottom: 24px;
+}
+
+.section-gap-lg {
+  margin-bottom: 40px;
+}
+
+/* ─── Subtitle text ─── */
+.subtitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.subtitle-light {
+  font-size: 1rem;
+  color: #9ca3af;
+}
+
+.subtitle-bold {
+  font-weight: 700;
+  color: #374151;
+}
+
+/* ─── Main title ─── */
+.main-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  color: #111827;
+}
+
+@media (min-width: 768px) {
+  .main-title {
+    font-size: 1.75rem;
+  }
+}
+
+.title-gradient {
+  background: linear-gradient(to right, #22c55e, #059669);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ─── VSL container ─── */
+.vsl-container {
+  width: 100%;
+  max-width: 400px;
+}
+
 /* ─── Info card ─── */
 .info-card {
+  width: 100%;
+  max-width: 448px;
+  text-align: center;
   background: linear-gradient(135deg, #fafffe 0%, #f5fcf9 100%);
   border: 1px solid rgba(37, 211, 102, 0.1);
   border-radius: 20px;
   padding: 28px 24px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.info-card-icon-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.info-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4ade80, #10b981);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.info-card-text {
+  font-size: 1rem;
+  color: #374151;
+  line-height: 1.625;
+  margin-bottom: 8px;
+}
+
+.info-card-strong {
+  color: #111827;
+}
+
+.info-card-subtext {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.625;
+}
+
+/* ─── Button wrapper ─── */
+.btn-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ─── Footer disclaimer ─── */
+.footer-disclaimer {
+  font-size: 0.75rem;
+  color: #d1d5db;
+  margin-top: 48px;
+  text-align: center;
 }

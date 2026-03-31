@@ -7,45 +7,45 @@ export default function Home() {
       {/* Barra decorativa topo */}
       <div className="top-bar" />
 
-      <main className="flex-1 flex flex-col items-center justify-start px-5 pt-10 pb-16 max-w-xl mx-auto">
+      <main className="main-container">
         {/* Badge + Data */}
-        <div className="text-center mb-6">
-          <div className="badge mb-4">
+        <div className="section-center section-gap-sm">
+          <div className="badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
             </svg>
             Começa em breve
           </div>
-          <p className="text-sm font-semibold text-gray-500 tracking-wide uppercase mb-1">
+          <p className="subtitle">
             Próxima Segunda &mdash; dia 06/04
           </p>
-          <p className="text-base text-gray-400">
-            Sempre às <span className="font-bold text-gray-700">19h00</span>
+          <p className="subtitle-light">
+            Sempre às <span className="subtitle-bold">19h00</span>
           </p>
         </div>
 
         {/* Countdown */}
-        <div className="mb-10">
+        <div className="section-gap-lg">
           <Countdown />
         </div>
 
         {/* Divider */}
-        <div className="divider mb-10" />
+        <div className="divider section-gap-lg" />
 
         {/* Titulo */}
-        <div className="text-center mb-10">
-          <h1 className="text-2xl md:text-[1.75rem] font-extrabold leading-snug tracking-tight text-gray-900">
+        <div className="section-center section-gap-lg">
+          <h1 className="main-title">
             Seu acesso ao Desafio de 5 Dias de Breathwork e Neurociência da
             Respiração{" "}
-            <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
+            <span className="title-gradient">
               está ativo!
             </span>
           </h1>
         </div>
 
         {/* VSL Player Vertical */}
-        <div className="w-full max-w-[400px] mb-10">
+        <div className="vsl-container section-gap-lg">
           <div className="vsl-wrapper">
             <div
               dangerouslySetInnerHTML={{
@@ -56,27 +56,27 @@ export default function Home() {
         </div>
 
         {/* Info card com texto do grupo */}
-        <div className="info-card w-full max-w-md mb-10 text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-sm">
+        <div className="info-card section-gap-lg">
+          <div className="info-card-icon-wrap">
+            <div className="info-card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
             </div>
           </div>
-          <p className="text-base text-gray-700 leading-relaxed mb-2">
+          <p className="info-card-text">
             Para garantir seu link de acesso, é necessário entrar no{" "}
-            <strong className="text-gray-900">grupo de avisos oficial</strong>.
+            <strong className="info-card-strong">grupo de avisos oficial</strong>.
           </p>
-          <p className="text-sm text-gray-500 leading-relaxed">
+          <p className="info-card-subtext">
             Lá você vai receber o link da Transmissão + Conteúdos extras antes
             do evento.
           </p>
         </div>
 
         {/* Botao WhatsApp */}
-        <div className="w-full flex justify-center">
+        <div className="btn-wrapper">
           <a
             href="https://lp.felipemarx.com.br/grupo-avisos-desafio-de-breathwork"
             target="_blank"
@@ -91,7 +91,7 @@ export default function Home() {
         </div>
 
         {/* Footer sutil */}
-        <p className="text-xs text-gray-300 mt-12 text-center">
+        <p className="footer-disclaimer">
           Ao entrar no grupo, você concorda em receber avisos sobre o Desafio.
         </p>
       </main>
