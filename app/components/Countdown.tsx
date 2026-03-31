@@ -2,25 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-function getNextTarget(): Date {
-  const now = new Date();
-  const target = new Date(now);
-
-  // Próxima segunda-feira às 19h (horário de Brasília)
-  const dayOfWeek = now.getDay();
-  let daysUntilMonday = (1 - dayOfWeek + 7) % 7;
-  if (daysUntilMonday === 0) {
-    // Se hoje é segunda, verifica se já passou das 19h
-    const brazilHour = now.getUTCHours() - 3;
-    if (brazilHour >= 19) {
-      daysUntilMonday = 7;
-    }
-  }
-
-  target.setDate(now.getDate() + daysUntilMonday);
-  target.setUTCHours(22, 0, 0, 0); // 19h BRT = 22h UTC
-
-  return target;
+function getTarget(): Date {
+  // 06/04/2026 às 19h BRT (22h UTC)
+  return new Date(Date.UTC(2026, 3, 6, 22, 0, 0));
 }
 
 export default function Countdown() {
@@ -30,51 +14,74 @@ export default function Countdown() {
     minutes: 0,
     seconds: 0,
   });
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const target = getNextTarget();
+    setMounted(true);
+    const target = getTarget();
 
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
+    const tick = () => {
+      const now = Date.now();
       const distance = target.getTime() - now;
 
       if (distance <= 0) {
-        clearInterval(interval);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
       }
 
       setTimeLeft({
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        hours: Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        ),
         minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((distance % (1000 * 60)) / 1000),
       });
-    }, 1000);
+    };
 
+    tick();
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
   }, []);
 
   const pad = (n: number) => String(n).padStart(2, "0");
 
+  if (!mounted) {
+    return (
+      <div className="countdown-grid">
+        {["Dias", "Horas", "Min", "Seg"].map((label) => (
+          <div className="countdown-cell" key={label}>
+            <div className="countdown-number">--</div>
+            <div className="countdown-label">{label}</div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const cells = [
+    { value: timeLeft.days, label: "Dias" },
+    { value: timeLeft.hours, label: "Horas" },
+    { value: timeLeft.minutes, label: "Min" },
+    { value: timeLeft.seconds, label: "Seg" },
+  ];
+
   return (
-    <div className="flex gap-3 justify-center">
-      <div className="countdown-cell">
-        <div className="countdown-number">{pad(timeLeft.days)}</div>
-        <div className="countdown-label">Dias</div>
-      </div>
-      <div className="countdown-cell">
-        <div className="countdown-number">{pad(timeLeft.hours)}</div>
-        <div className="countdown-label">Horas</div>
-      </div>
-      <div className="countdown-cell">
-        <div className="countdown-number">{pad(timeLeft.minutes)}</div>
-        <div className="countdown-label">Minutos</div>
-      </div>
-      <div className="countdown-cell">
-        <div className="countdown-number">{pad(timeLeft.seconds)}</div>
-        <div className="countdown-label">Segundos</div>
-      </div>
+    <div className="countdown-grid">
+      {cells.map((cell, i) => (
+        <div key={cell.label} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div className="countdown-cell">
+            <div className="countdown-number">{pad(cell.value)}</div>
+            <div className="countdown-label">{cell.label}</div>
+          </div>
+          {i < cells.length - 1 && (
+            <div className="countdown-separator">
+              <div className="countdown-separator-dot" />
+              <div className="countdown-separator-dot" />
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

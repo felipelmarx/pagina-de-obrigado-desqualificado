@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-sans: var(--font-inter);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,72 +11,179 @@
 }
 
 body {
-  background-color: #ffffff;
-  color: #000000;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #ffffff;
+  color: #1a1a2e;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ─── Decorative top gradient bar ─── */
+.top-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #25d366 0%, #128c7e 50%, #075e54 100%);
+}
+
+/* ─── Countdown ─── */
+.countdown-grid {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
 }
 
 .countdown-cell {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  padding: 12px 8px;
-  min-width: 70px;
+  background: linear-gradient(135deg, #f8fffe 0%, #f0faf7 100%);
+  border: 1px solid rgba(37, 211, 102, 0.15);
+  border-radius: 16px;
+  padding: 16px 12px;
+  min-width: 76px;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.06);
+  transition: transform 0.2s ease;
+}
+
+.countdown-cell:hover {
+  transform: translateY(-2px);
 }
 
 .countdown-number {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   line-height: 1;
-  color: #000000;
+  color: #1a1a2e;
+  letter-spacing: -0.02em;
 }
 
 .countdown-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(0, 0, 0, 0.45);
-  margin-top: 4px;
+  letter-spacing: 0.15em;
+  color: #128c7e;
+  margin-top: 6px;
+  font-weight: 600;
 }
 
+/* ─── Separator dots between cells ─── */
+.countdown-separator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding-bottom: 18px;
+}
+
+.countdown-separator-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, 0.4);
+}
+
+/* ─── VSL wrapper ─── */
+.vsl-wrapper {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ─── WhatsApp Button ─── */
 .btn-whatsapp {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background-color: #25d366;
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   color: #ffffff;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  padding: 18px 40px;
-  border-radius: 50px;
+  padding: 18px 36px;
+  border-radius: 60px;
   text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3), 0 2px 8px rgba(37, 211, 102, 0.15);
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-whatsapp::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-whatsapp:hover::before {
+  left: 100%;
 }
 
 .btn-whatsapp:hover {
-  background-color: #20bd5a;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(37, 211, 102, 0.45);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(37, 211, 102, 0.4), 0 4px 12px rgba(37, 211, 102, 0.2);
 }
 
-@keyframes pulse-green {
+.btn-whatsapp:active {
+  transform: translateY(-1px);
+}
+
+@keyframes pulse-soft {
   0%, 100% {
-    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3), 0 2px 8px rgba(37, 211, 102, 0.15);
   }
   50% {
-    box-shadow: 0 8px 32px rgba(37, 211, 102, 0.55);
+    box-shadow: 0 8px 32px rgba(37, 211, 102, 0.45), 0 2px 12px rgba(37, 211, 102, 0.25);
   }
 }
 
 .btn-whatsapp {
-  animation: pulse-green 2s ease-in-out infinite;
+  animation: pulse-soft 3s ease-in-out infinite;
 }
 
 .btn-whatsapp:hover {
   animation: none;
+}
+
+/* ─── Badge ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #f0faf7 0%, #e8f8f0 100%);
+  border: 1px solid rgba(37, 211, 102, 0.2);
+  color: #128c7e;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ─── Divider ─── */
+.divider {
+  width: 48px;
+  height: 3px;
+  background: linear-gradient(90deg, #25d366, #128c7e);
+  border-radius: 3px;
+  margin: 0 auto;
+}
+
+/* ─── Info card ─── */
+.info-card {
+  background: linear-gradient(135deg, #fafffe 0%, #f5fcf9 100%);
+  border: 1px solid rgba(37, 211, 102, 0.1);
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
