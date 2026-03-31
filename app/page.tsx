@@ -4,17 +4,23 @@ import Script from "next/script";
 export default function Home() {
   return (
     <main className="flex-1 flex flex-col items-center justify-start px-4 py-10">
+      {/* Countdown no topo */}
+      <div className="text-center mb-8">
+        <p className="text-sm text-black/50 uppercase tracking-widest mb-1">
+          Próxima Segunda dia 06/04
+        </p>
+        <p className="text-base text-black/60 mb-4">
+          Sempre às <strong className="text-black">19h00</strong>
+        </p>
+        <Countdown />
+      </div>
+
       {/* Titulo */}
       <div className="text-center max-w-lg mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold leading-tight mb-4">
+        <h1 className="text-2xl md:text-3xl font-bold leading-tight">
           Seu acesso ao Desafio de 5 Dias de Breathwork e Neurociência da
           Respiração está ativo!
         </h1>
-        <p className="text-base md:text-lg text-white/70 leading-relaxed">
-          Assista o vídeo abaixo e entre no nosso{" "}
-          <strong className="text-white">grupo oficial de avisos</strong> para
-          não perder nenhuma aula ao vivo.
-        </p>
       </div>
 
       {/* VSL Player Vertical */}
@@ -26,19 +32,20 @@ export default function Home() {
         />
       </div>
 
-      {/* Countdown */}
-      <div className="text-center mb-8">
-        <p className="text-sm text-white/50 uppercase tracking-widest mb-1">
-          Próxima Segunda dia 06/04
+      {/* Texto grupo */}
+      <div className="text-center max-w-lg mb-8">
+        <p className="text-base md:text-lg text-black/70 leading-relaxed">
+          Para garantir seu o link de acesso, é necessário entrar no{" "}
+          <strong className="text-black">grupo de avisos oficial</strong>.
         </p>
-        <p className="text-base text-white/70 mb-4">
-          Sempre às <strong className="text-white">19h00</strong>
+        <p className="text-base md:text-lg text-black/70 leading-relaxed mt-2">
+          Lá você vai receber o link da Transmissão + Conteúdos extras antes do
+          evento.
         </p>
-        <Countdown />
       </div>
 
       {/* Botao WhatsApp */}
-      <div className="text-center mt-4 w-full flex justify-center">
+      <div className="text-center w-full flex justify-center">
         <a
           href="https://lp.felipemarx.com.br/grupo-avisos-desafio-de-breathwork"
           target="_blank"
