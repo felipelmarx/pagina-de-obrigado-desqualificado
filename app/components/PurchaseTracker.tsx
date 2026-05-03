@@ -103,39 +103,20 @@ export default function PurchaseTracker() {
     const query = readQuery();
     const handoff = readHandoff();
 
-    // Guard: só dispara Purchase se houver signal real de funil pago.
-    // Acesso direto (sem query) ou refresh sem origem = NÃO dispara.
-    // Aceita: eid (UUID propagado), transaction_id (PagTrust), ou handoff localStorage válido.
-    const hasFunnelSignal = Boolean(
-      query.eid ||
-        query.transaction_id ||
-        (handoff && handoff.purchase_event_id),
-    );
-    if (!hasFunnelSignal) {
-      console.log("[PurchaseTracker] no funnel signal — Purchase NOT fired");
-      return;
-    }
+    // Esta página é a obrigado DESQUALIFICADA — quem cai aqui pagou no funnel desqualificado.
+    // Webhook PagTrust desqualificada NÃO dispara Purchase (config no route.ts) pra evitar dup.
+    // Logo, browser é a única fonte. Dispara sempre.
 
-    // Prioridade: pt_{transactionId} (CASA com webhook PagTrust dedup) > eid > handoff > UUID novo
     const transactionId =
       query.transaction || query.transaction_id || query.id || query.order;
     const eventId = transactionId
       ? `pt_${transactionId}`
       : query.eid || handoff?.purchase_event_id || generateEventId();
 
-    const value = toNumber(query.value) ?? handoff?.value;
+    const value = toNumber(query.value) ?? handoff?.value ?? 7;
     const currency = query.currency || handoff?.currency || "BRL";
-    const contentName = query.content_name || handoff?.content_name;
-    const tier = query.tier || handoff?.tier;
-
-    // Sanity: sem value OU sem content_name = signal incompleto, não dispara
-    if (value == null || !contentName) {
-      console.log(
-        "[PurchaseTracker] funnel signal present but value/content_name missing — Purchase NOT fired",
-        { value, contentName },
-      );
-      return;
-    }
+    const contentName = query.content_name || handoff?.content_name || "desqualificado";
+    const tier = query.tier || handoff?.tier || "red";
 
     const customData: Record<string, unknown> = {
       value,

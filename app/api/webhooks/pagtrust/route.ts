@@ -177,6 +177,14 @@ export async function POST(req: NextRequest) {
   const valueReal = (amount as number) > 100 ? (amount as number) / 100 : (amount as number);
   const content_name = classifyContentName(funnelHint);
 
+  // Desqualificado: o BROWSER da obrigado-desqualificada (parabens-breathwork.vercel.app)
+  // dispara Purchase. Pra evitar dup com webhook, NÃO dispara server-side aqui.
+  // Qualificado: webhook é a fonte primária — dispara normalmente.
+  if (content_name === "desqualificado") {
+    console.log("[Webhook PagTrust] desqualificado — purchase NOT fired (browser-side handles it)");
+    return NextResponse.json({ ok: true, skipped: "desqualificado_handled_by_browser" });
+  }
+
   const event_id = transactionId ? `pt_${transactionId}` : crypto.randomUUID();
 
   console.log("[Webhook PagTrust] extracted fields:", {
