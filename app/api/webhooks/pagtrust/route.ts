@@ -177,14 +177,19 @@ export async function POST(req: NextRequest) {
   const valueReal = (amount as number) > 100 ? (amount as number) / 100 : (amount as number);
   const content_name = classifyContentName(funnelHint);
 
-  // Desqualificado: o BROWSER da obrigado-desqualificada (parabens-breathwork.vercel.app)
-  // dispara Purchase. Pra evitar dup com webhook, NÃO dispara server-side aqui.
-  // Qualificado: webhook é a fonte primária — dispara normalmente.
-  if (content_name === "desqualificado") {
-    console.log("[Webhook PagTrust] desqualificado — purchase NOT fired (browser-side handles it)");
-    return NextResponse.json({ ok: true, skipped: "desqualificado_handled_by_browser" });
-  }
+  // PagTrust não passa transaction_id na URL pós-pagamento → browser não consegue
+  // gerar event_id que case com webhook server-side. Pra evitar duplicação, webhook
+  // NÃO dispara Purchase em nenhum tier. Browser-side (PurchaseTracker no Vercel
+  // desqualificada + snippet WP qualificada) é a fonte única.
+  console.log("[Webhook PagTrust] purchase NOT fired (browser-side is single source)", {
+    content_name,
+    transactionId,
+    valueReal,
+  });
+  return NextResponse.json({ ok: true, skipped: "browser_is_single_source", content_name });
 
+  /* eslint-disable no-unreachable -- intentional dead code; pode ser reativado se PagTrust
+     começar a passar transaction_id na URL pós-pagamento (browser daria pt_{tx} igual e dedup ok) */
   const event_id = transactionId ? `pt_${transactionId}` : crypto.randomUUID();
 
   console.log("[Webhook PagTrust] extracted fields:", {
