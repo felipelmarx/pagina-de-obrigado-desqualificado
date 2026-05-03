@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 
 function getTarget(): Date {
-  // 06/04/2026 às 19h BRT (22h UTC)
-  return new Date(Date.UTC(2026, 3, 6, 22, 0, 0));
+  // 04/05/2026 às 19h BRT (22h UTC)
+  return new Date(Date.UTC(2026, 4, 4, 22, 0, 0));
 }
 
 export default function Countdown() {

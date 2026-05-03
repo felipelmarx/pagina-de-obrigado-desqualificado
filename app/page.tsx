@@ -1,9 +1,12 @@
 import Countdown from "./components/Countdown";
+import PurchaseTracker from "./components/PurchaseTracker";
 import Script from "next/script";
 
 export default function Home() {
   return (
     <>
+      <PurchaseTracker />
+
       {/* Barra decorativa topo */}
       <div className="top-bar" />
 
@@ -18,7 +21,7 @@ export default function Home() {
             Começa em breve
           </div>
           <p className="subtitle">
-            Próxima Segunda &mdash; dia 06/04
+            Próxima Segunda &mdash; dia 04/05
           </p>
           <p className="subtitle-light">
             Sempre às <span className="subtitle-bold">19h00</span>
