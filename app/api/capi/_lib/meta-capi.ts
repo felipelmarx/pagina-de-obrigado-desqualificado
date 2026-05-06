@@ -9,6 +9,13 @@ export type CapiUserData = {
   phone?: string;
   firstname?: string;
   lastname?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+  gender?: string;
+  dob?: string;
+  external_id?: string;
   fbp?: string;
   fbc?: string;
   client_user_agent?: string;
@@ -21,6 +28,7 @@ export type CapiCustomData = {
   content_category?: string;
   score?: number;
   tier?: string;
+  transaction_id?: string;
 };
 
 export type CapiPayload = {
@@ -45,6 +53,7 @@ function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
+// E.164 sem o "+"
 function normalizePhoneBR(phone: string): string {
   const digits = phone.replace(/\D/g, "");
   if (!digits) return "";
@@ -55,6 +64,49 @@ function normalizePhoneBR(phone: string): string {
 
 function normalizeName(name: string): string {
   return stripDiacritics(name.trim().toLowerCase());
+}
+
+function normalizeCity(city: string): string {
+  return stripDiacritics(city.trim().toLowerCase()).replace(/[^a-z]/g, "");
+}
+
+function normalizeState(state: string): string {
+  return stripDiacritics(state.trim().toLowerCase())
+    .replace(/[^a-z]/g, "")
+    .slice(0, 2);
+}
+
+function normalizeZip(zip: string): string {
+  return zip.replace(/\D/g, "");
+}
+
+function normalizeCountry(country: string): string {
+  return country.trim().toLowerCase().slice(0, 2);
+}
+
+function normalizeGender(gender: string): string {
+  const g = gender.trim().toLowerCase().charAt(0);
+  return g === "m" || g === "f" ? g : "";
+}
+
+function normalizeDob(dob: string): string {
+  // Aceita YYYYMMDD, YYYY-MM-DD, DD/MM/YYYY → produz YYYYMMDD
+  const onlyDigits = dob.replace(/\D/g, "");
+  if (onlyDigits.length === 8) {
+    if (/^\d{4}/.test(onlyDigits.slice(0, 4))) {
+      const yyyy = parseInt(onlyDigits.slice(0, 4));
+      if (yyyy > 1900 && yyyy < 2100) return onlyDigits;
+    }
+    const dd = onlyDigits.slice(0, 2);
+    const mm = onlyDigits.slice(2, 4);
+    const yyyy = onlyDigits.slice(4, 8);
+    if (parseInt(yyyy) > 1900 && parseInt(yyyy) < 2100) return yyyy + mm + dd;
+  }
+  return "";
+}
+
+function normalizeExternalId(id: string): string {
+  return id.trim().toLowerCase();
 }
 
 function getClientIp(req: NextRequest): string {
@@ -68,6 +120,7 @@ function getClientIp(req: NextRequest): string {
 function buildHashedUserData(user: CapiUserData, req: NextRequest): Record<string, unknown> {
   const out: Record<string, unknown> = {};
 
+  // Hashed PII
   if (user.email) {
     const em = normalizeEmail(user.email);
     if (em) out.em = [sha256(em)];
@@ -84,13 +137,43 @@ function buildHashedUserData(user: CapiUserData, req: NextRequest): Record<strin
     const ln = normalizeName(user.lastname);
     if (ln) out.ln = [sha256(ln)];
   }
+  if (user.city) {
+    const ct = normalizeCity(user.city);
+    if (ct) out.ct = [sha256(ct)];
+  }
+  if (user.state) {
+    const st = normalizeState(user.state);
+    if (st) out.st = [sha256(st)];
+  }
+  if (user.zip) {
+    const zp = normalizeZip(user.zip);
+    if (zp) out.zp = [sha256(zp)];
+  }
+  if (user.country) {
+    const country = normalizeCountry(user.country);
+    if (country) out.country = [sha256(country)];
+  }
+  if (user.gender) {
+    const ge = normalizeGender(user.gender);
+    if (ge) out.ge = [sha256(ge)];
+  }
+  if (user.dob) {
+    const db = normalizeDob(user.dob);
+    if (db) out.db = [sha256(db)];
+  }
+  if (user.external_id) {
+    const eid = normalizeExternalId(user.external_id);
+    if (eid) out.external_id = [sha256(eid)];
+  }
 
+  // Não-hasheados (cookies + UA + IP — Meta espera em texto puro)
   if (user.fbp) out.fbp = user.fbp;
   if (user.fbc) out.fbc = user.fbc;
 
   const ua = user.client_user_agent || req.headers.get("user-agent") || "";
   if (ua) out.client_user_agent = ua;
 
+  // IP: Vercel encaminha IPv4 ou IPv6 via x-forwarded-for. Meta aceita ambos.
   const ip = getClientIp(req);
   if (ip) out.client_ip_address = ip;
 
