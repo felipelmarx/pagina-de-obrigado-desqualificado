@@ -44,6 +44,16 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-ZSSXVNKWYS"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-ZSSXVNKWYS');`}
+        </Script>
         {children}
       </body>
     </html>
